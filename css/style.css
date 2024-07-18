@@ -1,0 +1,32 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+}
+
+body {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.card {
+    background-color: #fff;
+    color: #000;
+}
+
+.form-preview {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    min-height: 200px;
+    background-color: #fff;
+    color: #000;
+}
+
+
+.list-group-item {
+    color: var(--primary-color);
+}
