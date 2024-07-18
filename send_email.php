@@ -1,25 +1,50 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recibir datos del formulario
     $formTitle = $_POST['formTitle'];
     $emailInput = $_POST['emailInput'];
-    $formHtml = $_POST['formHtml'];
 
-    // Configuración de envío de correo electrónico
-    $to = $emailInput;
-    $subject = "Reporte de formulario: " . $formTitle;
-    $message = $formHtml;
+    // Crear el cuerpo del correo electrónico con los datos del formulario
+    $formBody = "<h2>Reporte de formulario: $formTitle</h2>";
+    foreach ($_POST as $key => $value) {
+        if ($key != 'formTitle' && $key != 'emailInput') {
+            $formBody .= "<p><strong>$key:</strong> $value</p>";
+        }
+    }
 
-    // Encabezados para el correo electrónico
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: <reportes@tumarkettumodelo.com.mx>"; // Cambiar por tu dirección de correo
+    $mail = new PHPMailer(true);
 
-    // Enviar correo electrónico
-    if (mail($to, $subject, $message, $headers)) {
+    try {
+        // Configuración del servidor SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.titan.email'; // Cambia esto por el host de tu servidor SMTP
+        $mail->SMTPAuth = true;
+        $mail->Username = 'reportes@tumarkettumodelo.com.mx'; // Cambia esto por tu dirección de correo
+        $mail->Password = '.d{DLr=W^_N*+;}'; // Cambia esto por tu contraseña de correo
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Usar SMTPS en lugar de STARTTLS para el puerto 465
+        $mail->Port = 465; // Usar el puerto 465 para SMTPS
+
+        // Destinatario
+        $mail->setFrom('reportes@tumarkettumodelo.com.mx', 'Reportes modelorama');
+        $mail->addAddress($emailInput);
+
+        // Contenido del correo
+        $mail->isHTML(true);
+        $mail->Subject = "Reporte de formulario: " . $formTitle;
+        $mail->Body = $formBody;
+
+        // Enviar correo
+        $mail->send();
         echo "El reporte ha sido enviado exitosamente a " . $emailInput;
-    } else {
-        echo "Error al enviar el reporte.";
+    } catch (Exception $e) {
+        echo "Error al enviar el reporte. Mailer Error: {$mail->ErrorInfo}";
     }
 }
 ?>

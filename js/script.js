@@ -20,43 +20,67 @@ $(document).ready(function() {
         onAdd: function (evt) {
             var itemEl = evt.item;
             var type = itemEl.getAttribute('data-type');
-
-            // Crear el campo con una etiqueta inicial editable
-            var fieldHtml = `
-                <div class="form-group">
-                    <label class="editable-label" contenteditable="true">Etiqueta</label>
-                    ${getFieldHtml(type)}
-                </div>
-            `;
-
-            // Agregar el campo generado al contenedor de formulario
+    
+            // Extract the label text
+            var labelText = 'Etiqueta'; // Default label text if not editable
+            var editableLabel = document.querySelector('.editable-label');
+            if (editableLabel) {
+                labelText = editableLabel.innerText;
+            }
+    
+            // Create the field with an initial editable label
+            var fieldHtml = addFormField(type, labelText);
+    
+            // Append the generated field to the form container
             $(formContainer).append(fieldHtml);
-
-            // Eliminar el elemento arrastrado de la lista de elementos
+    
+            // Remove the dragged item from the elements list
             itemEl.parentNode.removeChild(itemEl);
-
-            // Permitir editar la etiqueta directamente en el formulario
+    
+            // Allow direct editing of the label in the form
             $('.editable-label').focus();
         }
     });
-
-    function getFieldHtml(type) {
+    
+    function addFormField(type, label) {
         var fieldHtml;
+        var inputName = label.toLowerCase().replace(/\s+/g, '_');
+        console.log(`Campo:${inputName}`)
         switch (type) {
             case 'text':
-                fieldHtml = '<input type="text" class="form-control" name="textInput" required>';
+                fieldHtml = `
+                    <div class="form-group">
+                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <input type="text" class="form-control" id="${inputName}" name="${inputName}">
+                    </div>
+                `;
                 break;
             case 'number':
-                fieldHtml = '<input type="number" class="form-control" name="numberInput" required>';
+                fieldHtml = `
+                    <div class="form-group">
+                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <input type="number" class="form-control" id="${inputName}" name="${inputName}">
+                    </div>
+                `;
                 break;
             case 'date':
-                fieldHtml = '<input type="date" class="form-control" name="dateInput" required>';
+                fieldHtml = `
+                    <div class="form-group">
+                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <input type="date" class="form-control" id="${inputName}" name="${inputName}">
+                    </div>
+                `;
                 break;
             case 'file':
-                fieldHtml = '<input type="file" class="form-control-file" name="photos[]" multiple accept="image/*">';
+                fieldHtml = `
+                    <div class="form-group">
+                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <input type="file" class="form-control-file" name="photos[]" multiple accept="image/*">
+                    </div>
+                `;
                 break;
         }
-        return fieldHtml;
+        $(formContainer).append(fieldHtml);
     }
 
     $('#generateForm').on('click', function(e) {
@@ -92,7 +116,7 @@ $(document).ready(function() {
     });
 
    // Función para generar el HTML del formulario completo
-function generateFormHtml() {
+   function generateFormHtml() {
     var formTitle = $('input[name="formTitle"]').val();
     var emailInput = $('input[name="emailInput"]').val();
     var formHtml = `
@@ -113,36 +137,30 @@ function generateFormHtml() {
                 <form id="submitForm" class="mt-3">
                     ${$(formContainer).html()}
                     <div class="form-group">
-                        <button id="sendReportBtn" type="submit" class="btn btn-primary">Enviar reporte</button>
+                        <button type="button" class="btn btn-primary" id="sendReportButton">Enviar reporte</button>
                     </div>
                 </form>
             </div>
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
             <script>
-                // Evento al enviar el formulario
-                $('#submitForm').on('submit', function(e) {
-                    e.preventDefault();
+                $(document).ready(function() {
+                    $('#sendReportButton').on('click', function() {
+                        var formData = $('#submitForm').serializeArray();
+                        formData.push({ name: 'formTitle', value: '${formTitle}' });
+                        formData.push({ name: 'emailInput', value: '${emailInput}' });
 
-                    // Obtener el HTML del formulario
-                    var formHtml = $('#submitForm').html();
-
-                    // Enviar el formulario por AJAX a send_email.php
-                    $.ajax({
-                        type: 'POST',
-                        url: '../../send_email.php',
-                        data: {
-                            formHtml: formHtml,
-                            formTitle: '${formTitle}',
-                            emailInput: '${emailInput}'
-                        },
-                        success: function(response) {
-                            $('#message').html('<div class="alert alert-success">' + response + '</div>');
-                        },
-                        error: function(xhr, status, error) {
-                            $('#message').html('<div class="alert alert-danger">Error al enviar el reporte.</div>');
-                            console.error(xhr.responseText);
-                        }
+                        $.ajax({
+                            url: '../../send_email.php',
+                            type: 'POST',
+                            data: formData,
+                            success: function(response) {
+                                alert(response);
+                            },
+                            error: function(xhr, status, error) {
+                                alert('Error al enviar el reporte.');
+                            }
+                        });
                     });
                 });
             </script>
