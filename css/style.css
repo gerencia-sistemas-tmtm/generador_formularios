@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
+    --primary-color: #FFC611;
+    --secondary-color: #091F3A;
 }
 
 body {
@@ -11,6 +11,10 @@ body {
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color);
 }
 
 .card {
@@ -26,7 +30,10 @@ body {
     color: #000;
 }
 
-
 .list-group-item {
-    color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.alert {
+    word-wrap: break-word;
 }
