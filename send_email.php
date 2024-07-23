@@ -34,7 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Destinatario
         $mail->setFrom('reportes@tumarkettumodelo.com.mx', 'Reportes modelorama');
-        $mail->addAddress($emailInput);
+        $emailAddresses = explode(',', $emailInput);
+        foreach ($emailAddresses as $emailAddress) {
+            $mail->addAddress(trim($emailAddress));
+        }
 
         // Contenido del correo
         $mail->isHTML(true);
