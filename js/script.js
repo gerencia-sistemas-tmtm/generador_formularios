@@ -39,6 +39,7 @@ $(document).ready(function() {
     
             // Allow direct editing of the label in the form
             $('.editable-label').focus();
+
         }
     });
     
@@ -50,7 +51,7 @@ $(document).ready(function() {
             case 'text':
                 fieldHtml = `
                     <div class="form-group">
-                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <label class="editable-label" contenteditable="true"">${label}</label>
                         <input type="text" class="form-control" id="${inputName}" name="${inputName}">
                     </div>
                 `;
@@ -58,7 +59,7 @@ $(document).ready(function() {
             case 'number':
                 fieldHtml = `
                     <div class="form-group">
-                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <label class="editable-label" contenteditable="true"">${label}</label>
                         <input type="number" class="form-control" id="${inputName}" name="${inputName}">
                     </div>
                 `;
@@ -66,7 +67,7 @@ $(document).ready(function() {
             case 'date':
                 fieldHtml = `
                     <div class="form-group">
-                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <label class="editable-label" contenteditable="true"">${label}</label>
                         <input type="date" class="form-control" id="${inputName}" name="${inputName}">
                     </div>
                 `;
@@ -74,7 +75,7 @@ $(document).ready(function() {
             case 'file':
                 fieldHtml = `
                     <div class="form-group">
-                        <label class="editable-label" contenteditable="true" for="${inputName}">${label}</label>
+                        <label class="editable-label" contenteditable="true"">${label}</label>
                         <input type="file" class="form-control-file" name="photos[]" multiple accept="image/*">
                     </div>
                 `;
@@ -107,12 +108,13 @@ $(document).ready(function() {
             }
         });
 
-    });
+    }); 
 
     // Escuchar cambios en las etiquetas editables y actualizar el label del campo
     $(formContainer).on('input', '.editable-label', function() {
-        var labelText = $(this).text().trim();
+        let labelText = $(this).text().trim();
         $(this).prev('input, select, textarea').prev('label').text(labelText);
+        $(this).next().attr('name', labelText);
     });
 
    // Función para generar el HTML del formulario completo
