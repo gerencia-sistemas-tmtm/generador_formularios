@@ -24,3 +24,28 @@ Stack trace:
 #0 {main}
   thrown in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 5
 [18-Jul-2024 12:00:05 America/Mexico_City] PHP Warning:  Array to string conversion in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 17
+[23-Jul-2024 16:13:03 America/Mexico_City] PHP Warning:  Undefined array key "fileInput" in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 13
+[23-Jul-2024 16:20:39 America/Mexico_City] PHP Warning:  Undefined array key "fileInput" in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 13
+[23-Jul-2024 16:21:02 America/Mexico_City] PHP Warning:  Undefined array key "fileInput" in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 13
+[23-Jul-2024 16:22:53 America/Mexico_City] PHP Warning:  Undefined array key "fileInput" in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 13
+[23-Jul-2024 16:24:54 America/Mexico_City] PHP Warning:  Undefined array key "fileInput" in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 13
+[23-Jul-2024 16:31:27 America/Mexico_City] PHP Warning:  Array to string conversion in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 14
+[23-Jul-2024 16:32:42 America/Mexico_City] PHP Warning:  Array to string conversion in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 14
+[23-Jul-2024 16:35:29 America/Mexico_City] PHP Warning:  Array to string conversion in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 14
+[23-Jul-2024 16:35:29 America/Mexico_City] PHP Warning:  Undefined variable $files in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:35:29 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:35:29 America/Mexico_City] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /home2/tumarke8/public_html/Reporter_php/send_email.php:46
+Stack trace:
+#0 {main}
+  thrown in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:35:39 America/Mexico_City] PHP Warning:  Array to string conversion in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 14
+[23-Jul-2024 16:35:39 America/Mexico_City] PHP Warning:  Undefined variable $files in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:35:39 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:35:39 America/Mexico_City] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /home2/tumarke8/public_html/Reporter_php/send_email.php:46
+Stack trace:
+#0 {main}
+  thrown in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 46
+[23-Jul-2024 16:36:49 America/Mexico_City] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, string given in /home2/tumarke8/public_html/Reporter_php/send_email.php:45
+Stack trace:
+#0 {main}
+  thrown in /home2/tumarke8/public_html/Reporter_php/send_email.php on line 45

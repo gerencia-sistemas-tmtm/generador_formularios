@@ -10,9 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recibir datos del formulario
     $formTitle = $_POST['formTitle'];
     $emailInput = $_POST['emailInput'];
+    $files = $_FILES['fileInput'];
 
     // Crear el cuerpo del correo electrónico con los datos del formulario
-    $formBody = "<h2>Reporte de formulario: $formTitle</h2>";
+    $formBody = "<h2>Reporte: $formTitle</h2>";
     foreach ($_POST as $key => $value) {
         if ($key != 'formTitle' && $key != 'emailInput') {
             $formBody .= "<p><strong>$key:</strong> $value</p>";
@@ -39,6 +40,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->isHTML(true);
         $mail->Subject = "Reporte de formulario: " . $formTitle;
         $mail->Body = $formBody;
+
+         // Adjuntar archivos
+         for ($i = 0; $i < count($files['name']); $i++) {
+            if ($files['error'][$i] == UPLOAD_ERR_OK) {
+                $mail->addAttachment($files['tmp_name'][$i], $files['name'][$i]);
+            }
+        }
 
         // Enviar correo
         $mail->send();

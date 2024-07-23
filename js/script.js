@@ -76,7 +76,7 @@ $(document).ready(function() {
                 fieldHtml = `
                     <div class="form-group">
                         <label class="editable-label" contenteditable="true"">${label}</label>
-                        <input type="file" class="form-control-file" name="photos[]" multiple accept="image/*">
+                        <input type="file" class="form-control-file"  id="fileInput" name="fileInput[]" multiple>
                     </div>
                 `;
                 break;
@@ -114,7 +114,8 @@ $(document).ready(function() {
     $(formContainer).on('input', '.editable-label', function() {
         let labelText = $(this).text().trim();
         $(this).prev('input, select, textarea').prev('label').text(labelText);
-        $(this).next().attr('name', labelText);
+        if ( $(this).next().attr('type') != 'file')
+            $(this).next().attr('name', labelText);
     });
 
    // Función para generar el HTML del formulario completo
@@ -148,14 +149,16 @@ $(document).ready(function() {
             <script>
                 $(document).ready(function() {
                     $('#sendReportButton').on('click', function() {
-                        var formData = $('#submitForm').serializeArray();
-                        formData.push({ name: 'formTitle', value: '${formTitle}' });
-                        formData.push({ name: 'emailInput', value: '${emailInput}' });
+                        var formData = new FormData($('#submitForm')[0]);
+                        formData.append('formTitle', '${formTitle}');
+                        formData.append('emailInput', '${emailInput}');
 
                         $.ajax({
                             url: '../../send_email.php',
                             type: 'POST',
                             data: formData,
+                            processData: false,
+                            contentType: false,
                             success: function(response) {
                                 alert(response);
                             },
