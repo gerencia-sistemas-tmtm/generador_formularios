@@ -103,7 +103,7 @@ function addFormField(type, label) {
                             <input type="text" class="form-control" id="${inputName}" name="${inputName}">
                         </div>
                     </div>
-                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></div>
                 </div>
             `;
             break;
@@ -116,7 +116,7 @@ function addFormField(type, label) {
                             <input type="number" class="form-control" id="${inputName}" name="${inputName}">
                         </div>
                     </div>
-                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></div>
                 </div>
             `;
             break;
@@ -129,7 +129,7 @@ function addFormField(type, label) {
                             <input type="date" class="form-control" id="${inputName}" name="${inputName}">
                         </div>
                     </div>
-                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></div>
                 </div>
             `;
             break;
@@ -142,7 +142,7 @@ function addFormField(type, label) {
                             <input type="file" class="form-control-file" id="fileInput" name="fileInput[]" multiple>
                         </div>
                     </div>
-                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></div>
                 </div>
             `;
             break;
@@ -230,7 +230,7 @@ function setCurrentForms(directories) {
 }
 
 async function fetchAndSetCurrentForms() {
-    const url = "/Reporter_php/directories.php?path=forms";
+    const url = "/Formularios/directories.php?path=forms";
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -244,7 +244,7 @@ async function fetchAndSetCurrentForms() {
 }
 
 async function getForm(form) {
-    const url = `/Reporter_PHP/read_html.php?path=forms/${form}/`;
+    const url = `/Formularios/read_html.php?path=forms/${form}/`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -267,7 +267,7 @@ function loadForm(code) {
                 //console.log(line)
                 $(line).children().removeClass('col-md-12');
                 $(line).children().addClass('col-md-10');
-                $(line).append('<div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>');
+                $(line).append('<div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></div>');
                 $('#formContainer').append(line);
                 //document.getElementById('formContainer').insertAdjacentHTML('afterbegin', line);
             }
