@@ -196,15 +196,25 @@ async function fetchAndSetCurrentForms() {
 }
 
 async function getForm(form) {
-    const url = `/Reporter_PHP/read_html.php?path=forms/${form}`;
+    const url = `/Reporter_PHP/read_html.php?path=forms/${form}/`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
         const json = await response.json();
-        console.log(json);
+        loadForm(json)
     } catch (error) {
         console.error(error.message);
     }
+}
+
+function loadForm(code) {
+    let lines = code.reverse();
+    lines.forEach(line => {
+        if (line != "" ) {
+            if (!line.includes('button'))
+                document.getElementById('formContainer').insertAdjacentHTML('afterbegin', line);
+        }
+    })
 }
