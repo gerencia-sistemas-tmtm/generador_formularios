@@ -23,6 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dataFileName = $directory . '/form_data.txt';
     file_put_contents($dataFileName, $data);
 
-    echo "Formulario generado y guardado en <a href='https://tumarkettumodelo.com.mx/Reporter_php/$directory'> https://tumarkettumodelo.com.mx/Reporter_php/$directory.";
+    echo "Formulario generado y guardado en <a href='https://tumarkettumodelo.com.mx/Reporter_php/$directory'  target=_blank> https://tumarkettumodelo.com.mx/Reporter_php/$directory.";
 }
 ?>
