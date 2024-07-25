@@ -258,11 +258,19 @@ async function getForm(form) {
 }
 
 function loadForm(code) {
-    let lines = code.reverse();
+    //let lines = code.reverse();
+    let lines = code
     lines.forEach(line => {
-        if (line != "" ) {
-            if (!line.includes('button'))
-                document.getElementById('formContainer').insertAdjacentHTML('afterbegin', line);
+        if (line.trim() != "") {
+            if (!line.includes('button')) {
+                line = $.parseHTML(line);
+                //console.log(line)
+                $(line).children().removeClass('col-md-12');
+                $(line).children().addClass('col-md-10');
+                $(line).append('<div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>');
+                $('#formContainer').append(line);
+                //document.getElementById('formContainer').insertAdjacentHTML('afterbegin', line);
+            }
         }
     })
 }
