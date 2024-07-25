@@ -1,9 +1,26 @@
 $(document).ready(function() {
     var elements = document.getElementById('elements');
     var formContainer = document.getElementById('formContainer');
-    var configPreview = document.getElementById('configPreview');
 
-    new Sortable(elements, {
+    initializeSortable();
+    initializeFormGeneration();
+    fetchAndSetCurrentForms();
+
+    // Event listener for form buttons
+    $(document).on('click', '.form-btn', function(e) {
+        let id = $(this).attr('id');
+        getForm(id);
+    });
+
+    // Event listener for editable labels
+    $(formContainer).on('input', '.editable-label', function() {
+        let labelText = $(this).text().trim();
+        $(this).next().attr('name', labelText);
+    });
+});
+
+function initializeSortable() {
+    new Sortable(document.getElementById('elements'), {
         group: {
             name: 'elements',
             pull: 'clone',
@@ -12,116 +29,102 @@ $(document).ready(function() {
         sort: false
     });
 
-    new Sortable(formContainer, {
+    new Sortable(document.getElementById('formContainer'), {
         group: {
             name: 'elements',
             put: true
         },
-        onAdd: function (evt) {
+        onAdd: function(evt) {
             var itemEl = evt.item;
             var type = itemEl.getAttribute('data-type');
-    
-            // Extract the label text
-            var labelText = 'Etiqueta'; // Default label text if not editable
+            var labelText = 'Etiqueta';
             var editableLabel = document.querySelector('.editable-label');
             if (editableLabel) {
                 labelText = editableLabel.innerText;
             }
-    
-            // Create the field with an initial editable label
             var fieldHtml = addFormField(type, labelText);
-    
-            // Append the generated field to the form container
             $(formContainer).append(fieldHtml);
-    
-            // Remove the dragged item from the elements list
             itemEl.parentNode.removeChild(itemEl);
-    
-            // Allow direct editing of the label in the form
             $('.editable-label').focus();
-
         }
     });
-    
-    function addFormField(type, label) {
-        var fieldHtml;
-        var inputName = label.toLowerCase().replace(/\s+/g, '_');
-        console.log(`Campo:${inputName}`)
-        switch (type) {
-            case 'text':
-                fieldHtml = `
-                    <div class="form-group">
-                        <label class="editable-label" contenteditable="true"">${label}</label>
-                        <input type="text" class="form-control" id="${inputName}" name="${inputName}">
-                    </div>
-                `;
-                break;
-            case 'number':
-                fieldHtml = `
-                    <div class="form-group">
-                        <label class="editable-label" contenteditable="true"">${label}</label>
-                        <input type="number" class="form-control" id="${inputName}" name="${inputName}">
-                    </div>
-                `;
-                break;
-            case 'date':
-                fieldHtml = `
-                    <div class="form-group">
-                        <label class="editable-label" contenteditable="true"">${label}</label>
-                        <input type="date" class="form-control" id="${inputName}" name="${inputName}">
-                    </div>
-                `;
-                break;
-            case 'file':
-                fieldHtml = `
-                    <div class="form-group">
-                        <label class="editable-label" contenteditable="true"">${label}</label>
-                        <input type="file" class="form-control-file"  id="fileInput" name="fileInput[]" multiple>
-                    </div>
-                `;
-                break;
-        }
-        $(formContainer).append(fieldHtml);
-    }
+}
 
+function initializeFormGeneration() {
     $('#generateForm').on('click', function(e) {
         e.preventDefault();
-
         var formTitle = $('input[name="formTitle"]').val();
         var emailInput = $('input[name="emailInput"]').val();
-        var formHtml = generateFormHtml();
-
-        $.ajax({
-            type: 'POST',
-            url: 'process.php',
-            data: {
+        var formHtml = generateFormHtml(formTitle, emailInput);
+        fetch('process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
                 formHtml: formHtml,
                 formTitle: formTitle,
                 emailInput: emailInput
-            },
-            success: function(response) {
-                $('#message').html('<div class="alert alert-success">' + response + '</div>');
-            },
-            error: function(xhr, status, error) {
-                $('#message').html('<div class="alert alert-danger">Error al generar el formulario.</div>');
-                console.error(xhr.responseText);
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('message').innerHTML = '<div class="alert alert-success">' + data + '</div>';
+        })
+        .catch(error => {
+            document.getElementById('message').innerHTML = '<div class="alert alert-danger">Error al generar el formulario.</div>';
+            console.error('There was a problem with the fetch operation:', error);
         });
-
-    }); 
-
-    // Escuchar cambios en las etiquetas editables y actualizar el label del campo
-    $(formContainer).on('input', '.editable-label', function() {
-        let labelText = $(this).text().trim();
-        $(this).prev('input, select, textarea').prev('label').text(labelText);
-        if ( $(this).next().attr('type') != 'file')
-            $(this).next().attr('name', labelText);
+        
     });
+}
 
-   // Función para generar el HTML del formulario completo
-   function generateFormHtml() {
-    var formTitle = $('input[name="formTitle"]').val();
-    var emailInput = $('input[name="emailInput"]').val();
+function addFormField(type, label) {
+    var inputName = label.toLowerCase().replace(/\s+/g, '_');
+    var fieldHtml;
+    switch (type) {
+        case 'text':
+            fieldHtml = `
+                <div class="form-group">
+                    <label class="editable-label" contenteditable="true">${label}</label>
+                    <input type="text" class="form-control" id="${inputName}" name="${inputName}">
+                </div>
+            `;
+            break;
+        case 'number':
+            fieldHtml = `
+                <div class="form-group">
+                    <label class="editable-label" contenteditable="true">${label}</label>
+                    <input type="number" class="form-control" id="${inputName}" name="${inputName}">
+                </div>
+            `;
+            break;
+        case 'date':
+            fieldHtml = `
+                <div class="form-group">
+                    <label class="editable-label" contenteditable="true">${label}</label>
+                    <input type="date" class="form-control" id="${inputName}" name="${inputName}">
+                </div>
+            `;
+            break;
+        case 'file':
+            fieldHtml = `
+                <div class="form-group">
+                    <label class="editable-label" contenteditable="true">${label}</label>
+                    <input type="file" class="form-control-file" id="fileInput" name="fileInput[]" multiple>
+                </div>
+            `;
+            break;
+    }
+    return fieldHtml;
+}
+
+function generateFormHtml(formTitle, emailInput) {
     var formHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -130,9 +133,6 @@ $(document).ready(function() {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${formTitle}</title>
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-            <style>
-                /* Aquí puedes agregar estilos adicionales si es necesario */
-            </style>
         </head>
         <body>
             <div class="container mt-5">
@@ -152,7 +152,6 @@ $(document).ready(function() {
                         var formData = new FormData($('#submitForm')[0]);
                         formData.append('formTitle', '${formTitle}');
                         formData.append('emailInput', '${emailInput}');
-
                         $.ajax({
                             url: '../../send_email.php',
                             type: 'POST',
@@ -173,5 +172,39 @@ $(document).ready(function() {
         </html>
     `;
     return formHtml;
+}
+
+function setCurrentForms(directories) {
+    let currentForms = document.getElementById('current-forms');
+    directories.forEach(dir => {
+        currentForms.insertAdjacentHTML('afterbegin', `<button class="dropdown-item form-btn" type="button" id="${dir}">${dir}</button>`);
+    });
+}
+
+async function fetchAndSetCurrentForms() {
+    const url = "/Reporter_php/directories.php?path=forms";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        setCurrentForms(json);
+    } catch (error) {
+        console.error(error.message);
     }
-});
+}
+
+async function getForm(form) {
+    const url = `/Reporter_PHP/read_html.php?path=forms/${form}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
