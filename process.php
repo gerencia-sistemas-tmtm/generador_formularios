@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Save form data to a file
     $data = "Título del Formulario: $formTitle\n";
     $data .= "Correo Destino: $emailInput\n";
+    $data .= $formHtml;
 
     $dataFileName = $directory . '/form_data.txt';
     file_put_contents($dataFileName, $data);

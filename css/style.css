@@ -30,6 +30,10 @@ body {
     color: #000;
 }
 
+#form-generator-container {
+    margin-top: 20px;
+}
+
 .list-group-item {
     color: var(--secondary-color);
 }
