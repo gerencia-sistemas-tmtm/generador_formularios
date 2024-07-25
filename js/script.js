@@ -97,7 +97,7 @@ function addFormField(type, label) {
         case 'text':
             fieldHtml = `
                 <div class="row container">
-                    <div class="col-md-10">
+                    <div class="col-md-10 generated">
                         <div class="form-group">
                             <label class="editable-label" contenteditable="true">${label}</label>
                             <input type="text" class="form-control" id="${inputName}" name="${inputName}">
@@ -109,25 +109,40 @@ function addFormField(type, label) {
             break;
         case 'number':
             fieldHtml = `
-                <div class="form-group">
-                    <label class="editable-label" contenteditable="true">${label}</label>
-                    <input type="number" class="form-control" id="${inputName}" name="${inputName}">
+                <div class="row container">
+                    <div class="col-md-10 generated">
+                        <div class="form-group">
+                            <label class="editable-label" contenteditable="true">${label}</label>
+                            <input type="number" class="form-control" id="${inputName}" name="${inputName}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
                 </div>
             `;
             break;
         case 'date':
             fieldHtml = `
-                <div class="form-group">
-                    <label class="editable-label" contenteditable="true">${label}</label>
-                    <input type="date" class="form-control" id="${inputName}" name="${inputName}">
+                <div class="row container">
+                    <div class="col-md-10 generated">
+                        <div class="form-group">
+                            <label class="editable-label" contenteditable="true">${label}</label>
+                            <input type="date" class="form-control" id="${inputName}" name="${inputName}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
                 </div>
             `;
             break;
         case 'file':
             fieldHtml = `
-                <div class="form-group">
-                    <label class="editable-label" contenteditable="true">${label}</label>
-                    <input type="file" class="form-control-file" id="fileInput" name="fileInput[]" multiple>
+                <div class="row container">
+                    <div class="col-md-10 generated">
+                        <div class="form-group">
+                            <label class="editable-label" contenteditable="true">${label}</label>
+                            <input type="file" class="form-control-file" id="fileInput" name="fileInput[]" multiple>
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
                 </div>
             `;
             break;
@@ -135,7 +150,24 @@ function addFormField(type, label) {
     return fieldHtml;
 }
 
+function modifyFormForUser(html) {
+    // Create a temporary container to hold the HTML content
+    var tempContainer = $('<div></div>').html(html);
+    
+    // Remove all div elements with the class form-delete
+    tempContainer.find('div.form-delete').remove();
+    tempContainer.find('div.generated').removeClass('col-md-10');
+    tempContainer.find('div.generated').addClass('col-md-12');
+    
+    // Return the modified HTML
+    return tempContainer.html();
+}
+
 function generateFormHtml(formTitle, emailInput) {
+
+    var originalHtml = $(formContainer).html();
+    var modifiedHtml = modifyFormForUser(originalHtml);
+
     var formHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -149,7 +181,7 @@ function generateFormHtml(formTitle, emailInput) {
             <div class="container mt-5">
                 <h2 class="text-center">${formTitle}</h2>
                 <form id="submitForm" class="mt-3">
-                    ${$(formContainer).html()}
+                    ${modifiedHtml}
                     <div class="form-group">
                         <button type="button" class="btn btn-primary" id="sendReportButton">Enviar reporte</button>
                     </div>
