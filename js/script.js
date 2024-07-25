@@ -12,6 +12,12 @@ $(document).ready(function() {
         getForm(id);
     });
 
+    $(document).on('click', '.btn-delete', function(e) {
+        e.preventDefault()
+
+        $(e.currentTarget).closest('.container').remove()
+    });
+
     // Event listener for editable labels
     $(formContainer).on('input', '.editable-label', function() {
         let labelText = $(this).text().trim();
@@ -90,9 +96,14 @@ function addFormField(type, label) {
     switch (type) {
         case 'text':
             fieldHtml = `
-                <div class="form-group">
-                    <label class="editable-label" contenteditable="true">${label}</label>
-                    <input type="text" class="form-control" id="${inputName}" name="${inputName}">
+                <div class="row container">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label class="editable-label" contenteditable="true">${label}</label>
+                            <input type="text" class="form-control" id="${inputName}" name="${inputName}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-delete"><button class="btn btn-danger btn-delete"><i class="bi bi-trash3"></i></div>
                 </div>
             `;
             break;
@@ -176,9 +187,14 @@ function generateFormHtml(formTitle, emailInput) {
 
 function setCurrentForms(directories) {
     let currentForms = document.getElementById('current-forms');
-    directories.forEach(dir => {
-        currentForms.insertAdjacentHTML('afterbegin', `<button class="dropdown-item form-btn" type="button" id="${dir}">${dir}</button>`);
-    });
+    if (directories.length != 0) {
+        directories.forEach(dir => {
+            currentForms.insertAdjacentHTML('afterbegin', `<button class="dropdown-item form-btn" type="button" id="${dir}">${dir}</button>`);
+        });
+    }
+    else {
+        currentForms.insertAdjacentHTML('afterbegin', `<button class="dropdown-item form-btn" type="button" >No hay formularios</button>`);
+    }
 }
 
 async function fetchAndSetCurrentForms() {
