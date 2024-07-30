@@ -12,8 +12,11 @@ $(document).ready(function() {
         getForm(id);
     });
 
-    $(document).on('click', '.btn-delete', function(e) {
-        e.preventDefault()
+    $(document).on('touchstart click', '.btn-delete', function(e) {
+        if(e.handled === false) return
+        e.stopPropagation();
+        e.preventDefault();
+        e.handled = true;
 
         $(e.currentTarget).closest('.container').remove()
     });
